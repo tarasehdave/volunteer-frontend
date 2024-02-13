@@ -62,3 +62,186 @@ layout: base
     }
 
 </script>
+<html>
+<body>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>ID</th>
+      <th>Age</th>
+      <th>Select</th>
+    </tr>
+  </thead>
+  <tbody id="result">
+    <!-- javascript generated data -->
+  </tbody>
+</table>
+
+<!-- Add buttons for editing and deleting -->
+<div>
+  <button id="editButton">Edit Selected</button>
+  <button id="deleteButton">Delete Selected</button>
+  <button onclick="window.location.href = '{{site.baseurl}}/createUser'">Create User</button>
+</div>
+
+<script type="module">
+  import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
+
+  const url = uri + '/api/users/';
+  const resultContainer = document.getElementById("result");
+
+  fetch(url, options)
+    .then(response => {
+      if (response.status !== 200) {
+        const errorMsg = 'Database response error: ' + response.status;
+        console.log(errorMsg);
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.innerHTML = errorMsg;
+        tr.appendChild(td);
+        resultContainer.appendChild(tr);
+        return;
+      }
+
+      response.json().then(data => {
+        console.log(data);
+        for (const row of data) {
+          const tr = document.createElement("tr");
+
+          // Make each cell editable with input fields
+          const name = document.createElement("td");
+          const id = document.createElement("td");
+          const dob = document.createElement("td");
+
+          const nameInput = document.createElement("input");
+          nameInput.value = row.name;
+          name.appendChild(nameInput);
+          const idInput = document.createElement("input");
+          idInput.value = row.uid;
+          id.appendChild(idInput);
+            //id.innerHTML = row.uid; 
+            dob.innerHTML = row.dob;
+
+          tr.appendChild(name);
+          tr.appendChild(id);
+          tr.appendChild(dob);
+
+          // Add a radio button for row selection
+          const selectRadio = document.createElement("input");
+          selectRadio.type = "radio";
+          selectRadio.name = "selectedRow";
+          selectRadio.value = row.id;
+
+          tr.appendChild(selectRadio);
+
+          resultContainer.appendChild(tr);
+        }
+      })
+    })
+    .catch(err => {
+      console.error(err);
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.innerHTML = err + ": " + url;
+      tr.appendChild(td);
+      resultContainer.appendChild(tr);
+    });
+</script>
+<script type="module">
+  import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
+      document.getElementById("editButton").addEventListener("click", editSelectedRows);
+  document.getElementById("deleteButton").addEventListener("click", deleteSelectedRows);
+    function deleteSelectedRows(){
+        // Set Authenticate endpoint
+        const url = uri + '/api/users/';
+        
+        const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
+
+    if (!selectedValue) {
+
+      console.log("No row selected.");
+      return;
+    }
+        // Set the body of the request to include login data from the DOM
+        const body = {
+            uid: selectedValue,  
+        };
+
+        // Change options according to Authentication requirements
+        const authOptions = {
+            ...options, // This will copy all properties from options
+            method: 'DELETE', // Override the method property
+            cache: 'no-cache', // Set the cache property
+            body: JSON.stringify(body)
+        };
+
+        // Fetch JWT
+        fetch(url, authOptions)
+        .then(response => {
+            // handle error response from Web API
+            if (!response.ok) {
+                
+                console.log(response);
+                return;
+            }
+            // Success!!!
+            // Redirect to the database page
+            window.location.href = "{{site.baseurl}}/AF_vusers.html";
+        })
+        // catch fetch errors (ie ACCESS to server blocked)
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
+    function editSelectedRows(){
+        // Set Authenticate endpoint
+        const url = uri + '/api/users/';
+        const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
+
+    if (!selectedValue) {
+
+      console.log("No row selected.");
+      return;
+    }
+        const editedValues = {
+        name: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(1) input").value,
+        uid: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(2) input").value,
+      };
+        // Set the body of the request to include login data from the DOM
+        const body = {
+            uid: selectedValue,
+            data: {"name":editedValues.name,"uid": editedValues.uid},
+        };
+
+        // Change options according to Authentication requirements
+        const authOptions = {
+            ...options, // This will copy all properties from options
+            method: 'PUT', // Override the method property
+            cache: 'no-cache', // Set the cache property
+            body: JSON.stringify(body)
+        };
+
+        // Fetch JWT
+        fetch(url, authOptions)
+        .then(response => {
+            // handle error response from Web API
+            if (!response.ok) {
+                
+                console.log(response);
+                return;
+            }
+            // Success!!!
+            // Redirect to the database page
+            window.location.href = "{{site.baseurl}}/AF_vusers.html";
+        })
+        // catch fetch errors (ie ACCESS to server blocked)
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
+</script>
+</body>
+</html>
