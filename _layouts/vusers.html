@@ -12,6 +12,7 @@ layout: base
         if(data._role == "Admin")
         {
             // call users fetch here
+            getAllUsers();
         }
         else
         {
@@ -88,6 +89,7 @@ layout: base
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
 
+  function getAllUsers(){
   const url = uri + '/api/users/';
   const resultContainer = document.getElementById("result");
 
@@ -147,6 +149,7 @@ layout: base
       tr.appendChild(td);
       resultContainer.appendChild(tr);
     });
+}
 </script>
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
