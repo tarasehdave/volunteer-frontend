@@ -3,11 +3,31 @@ layout: base
 ---
 
 <script>
+     var uri;
+        if (location.hostname === "localhost") {
+                uri = "http://localhost:8965";
+        } else if (location.hostname === "127.0.0.1") {
+                uri = "http://127.0.0.1:8965";
+        } else {
+                uri = "https://flask2.nighthawkcodingsociety.com";
+        }
+
+        const options = {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'include', // include, same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
     function search_event()
     {
+        debugger;
         if(isSignedIn())
         {
-            // call search code here
+            filter_event();
         } 
     }
 
@@ -41,13 +61,8 @@ layout: base
         return "";
     }
 
-</script>
-<script type="module">
 
-    // uri variable and options object are obtained from config.js
-    import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
-  
-    function search_event(){
+    function filter_event(){
         const url = uri + '/api/events/query';
         const resultContainer = document.getElementById("result");
 
@@ -64,47 +79,47 @@ layout: base
             return;
             }
 
-    response.json().then(data => {
-      console.log(data);
-      for (const row of data) {
-        const tr = document.createElement("tr");
+            response.json().then(data => {
+            console.log(data);
+            for (const row of data) {
+                const tr = document.createElement("tr");
 
-        // Make each cell editable with input fields
-        const name = document.createElement("td");
-        const id = document.createElement("td");
-        const age = document.createElement("td");
+                // Make each cell editable with input fields
+                const name = document.createElement("td");
+                const id = document.createElement("td");
+                const age = document.createElement("td");
 
-        const nameInput = document.createElement("input");
+                const nameInput = document.createElement("input");
 
-        nameInput.value = row.title;
-        name.appendChild(nameInput);
-          id.innerHTML = row.description; 
-          age.innerHTML = row.address;
+                nameInput.value = row.title;
+                name.appendChild(nameInput);
+                id.innerHTML = row.description; 
+                age.innerHTML = row.address;
 
-        tr.appendChild(name);
-        tr.appendChild(id);
-        tr.appendChild(age);
+                tr.appendChild(name);
+                tr.appendChild(id);
+                tr.appendChild(age);
 
-        // Add a radio button for row selection
-        const selectRadio = document.createElement("input");
-        selectRadio.type = "radio";
-        selectRadio.name = "selectedRow";
-        selectRadio.value = row.id;
+                // Add a radio button for row selection
+                const selectRadio = document.createElement("input");
+                selectRadio.type = "radio";
+                selectRadio.name = "selectedRow";
+                selectRadio.value = row.id;
 
-        tr.appendChild(selectRadio);
+                tr.appendChild(selectRadio);
 
-        resultContainer.appendChild(tr);
-      }
-    })
-  })
-  .catch(err => {
-    console.error(err);
-    const tr = document.createElement("tr");
-    const td = document.createElement("td");
-    td.innerHTML = err + ": " + url;
-    tr.appendChild(td);
-    resultContainer.appendChild(tr);
-  });
+                resultContainer.appendChild(tr);
+                }
+            })
+        })
+        .catch(err => {
+            console.error(err);
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.innerHTML = err + ": " + url;
+            tr.appendChild(td);
+            resultContainer.appendChild(tr);
+        });
     }
   </script>
 <div class="container">
