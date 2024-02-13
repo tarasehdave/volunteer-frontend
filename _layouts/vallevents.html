@@ -81,7 +81,7 @@ layout: base
         var d = document.forms['search'].description.value;
         var a = document.forms['search'].address.value;
         var z = document.forms['search'].zip.value;
-        url=url + 'title='+t+'&description='+d+'&address='+a+'&zipcode'+z;
+        url=url + 'title='+t+'&description='+d+'&address='+a+'&zipcode='+z;
         url = encodeURI(url);
         fetch(url, options)
         .then(response => {
