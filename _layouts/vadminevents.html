@@ -12,7 +12,7 @@ layout: base
         if(data._role == "Admin")
         {
             // call users fetch here
-            getAllEvents();
+            //getAllEvents();
         }
         else
         {
@@ -88,7 +88,7 @@ layout: base
 
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
-function getAllEvents(){
+
   const url = uri + '/api/events/';
   const resultContainer = document.getElementById("result");
 
@@ -159,7 +159,8 @@ function getAllEvents(){
       tr.appendChild(td);
       resultContainer.appendChild(tr);
     });
-}
+
+
 </script>
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
