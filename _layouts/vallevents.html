@@ -2,20 +2,37 @@
 layout: base 
 ---
 
-ALL EVENTS
+<script>
+    function getDate()
+    {
+        return new Date();
+    }
+</script>
 
-<table style="border:none;">
-    <tr>
-        <td>
-            some text
-        </td>
-        <td>
-            some text col 1
-        </td>
-    </tr>
-    <tr>
-        <td>
-            some other text
-        </td>
-    </tr>
-</table>
+<div class="container">
+    <form id="search" action="javascript:search_event()">
+        <p><label>
+            Title:
+            <input class="userInput" type="text" name="title" id="title" />
+        </label></p>
+        <p><label>
+            Description:
+            <input class="userInput" type="password" name="description" id="description" />
+        </label></p>
+        <p><label>
+            Address:
+            <input class="userInput" type="password" name="address" id="address" />
+        </label></p>
+        <p><label>
+            Zip:
+            <input class="userInput" type="text" pattern="^[0-9]{5}$" maxlength="5" placeholder="92127" name="zip" id="zip" />
+        </label></p>
+        <p><label>
+            Date:
+            <input class="userInput" type="date" pattern="" name="password" id="password" />
+        </label></p>
+        <p>
+            <button class="userInput">Search</button>
+        </p>
+    </form>
+</div>  
