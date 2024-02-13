@@ -63,9 +63,15 @@ layout: base
 
 
     function filter_event(){
-        const url = uri + '/api/events/query';
+        var url = uri + '/api/events/query?';
         const resultContainer = document.getElementById("result");
-
+        debugger;
+        var t = document.forms['search'].title.value;
+        var d = document.forms['search'].description.value;
+        var a = document.forms['search'].address.value;
+        var z = document.forms['search'].zip.value;
+        url=url + 'title='+t+'&description='+d+'&address='+a+'&zipcode'+z;
+        url = encodeURI(url);
         fetch(url, options)
         .then(response => {
         if (response.status !== 200) {
@@ -130,11 +136,11 @@ layout: base
         </label></p>
         <p><label>
             Description:
-            <input class="userInput" type="password" name="description" id="description" />
+            <input class="userInput" type="text" name="description" id="description" />
         </label></p>
         <p><label>
             Address:
-            <input class="userInput" type="password" name="address" id="address" />
+            <input class="userInput" type="text" name="address" id="address" />
         </label></p>
         <p><label>
             Zip:
@@ -142,7 +148,7 @@ layout: base
         </label></p>
         <p><label>
             Date:
-            <input class="userInput" type="date" pattern="" name="password" id="password" />
+            <input class="userInput" type="date" pattern="" name="date" id="date" />
         </label></p>
         <p>
             <button class="userInput">Search</button>
