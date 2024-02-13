@@ -3,10 +3,44 @@ layout: base
 ---
 
 <script>
-    function getDate()
+    function search_event()
     {
-        return new Date();
+        if(isSignedIn())
+        {
+            // call search code here
+        } 
     }
+
+    function isSignedIn()
+    {
+        let jwt = getCookie("jwt");
+        if(jwt)
+        {
+            return true;
+        }
+        else
+        {
+            alert("Please Log In first!");
+            return false;
+        }
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
 </script>
 <script type="module">
 
