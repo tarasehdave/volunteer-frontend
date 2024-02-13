@@ -5,11 +5,7 @@ layout: base
 <script>
     if(isSignedIn())
     {
-                // check for admin
-
-        let jwt = getCookie("jwt");
-        let data = parseJwt(jwt);
-        if(data._role == "Admin")
+        if(isAdmin())
         {
             // call users fetch here
             getAllEvents();
@@ -22,8 +18,6 @@ layout: base
 
     function isSignedIn()
     {
-        //setCookie('jwt','rah', 1);
-        
         let jwt = getCookie("jwt");
         if(jwt)
         {
@@ -31,10 +25,31 @@ layout: base
         }
         else
         {
-            alert("Please Log In first!");
             return false;
         }
     }
+
+    function isAdmin()
+    {
+        if(isSignedIn())
+        {
+            let jwt = getCookie("jwt");
+            let data = parseJwt(jwt);
+            if(data._role == "Admin")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     function parseJwt (token) {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -83,8 +98,26 @@ layout: base
 <div>
   <button id="editButton">Edit Selected</button>
   <button id="deleteButton">Delete Selected</button>
-  <button onclick="window.location.href = '{{site.baseurl}}/createEvent'">Create Event</button>
+  <button id="createEvent"  onclick="window.location.href = '{{site.baseurl}}/createEvent'">Create Event</button>
 </div>
+
+<script>
+  if(!isSignedIn())
+  {
+      document.getElementById('editButton').style.visibility = 'hidden';
+      document.getElementById('deleteButton').style.visibility = 'hidden';
+      document.getElementById('createEvent').style.visibility = 'hidden';
+  }
+  else
+  {
+      if(!isAdmin())
+      {
+          document.getElementById('editButton').style.visibility = 'hidden';
+          document.getElementById('deleteButton').style.visibility = 'hidden';
+          document.getElementById('createEvent').style.visibility = 'hidden';
+      }
+  }
+</script>
 
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';

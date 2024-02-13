@@ -24,11 +24,15 @@ layout: base
 
     function search_event()
     {
-        
+        debugger;
         if(isSignedIn())
         {
             filter_event();
         } 
+        else
+        {
+            alert("Please Log In first!");
+        }
     }
 
     function parseJwt (token) {
@@ -50,7 +54,6 @@ layout: base
         }
         else
         {
-            alert("Please Log In first!");
             return false;
         }
     }
@@ -245,8 +248,21 @@ layout: base
               <!-- javascript generated data -->
             </tbody>
           </table>
-<div>
-    <button id="editButton" onclick="addEvent()">Add Selected</button>
-</div>
+        <div>
+            <button id="editButton" onclick="addEvent()">Add Selected</button>
+        </div>
+        <script>
+            if(!isSignedIn())
+            {
+                document.getElementById('editButton').style.visibility = 'hidden';
+            }
+            else
+            {
+                if(!isAdmin())
+                {
+                    document.getElementById('editButton').style.visibility = 'hidden';
+                }
+            }
+        </script>
     </body>
 </html>
