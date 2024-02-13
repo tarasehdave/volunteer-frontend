@@ -1,0 +1,39 @@
+input.userInput {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    border: 1px solid #0fe9e9;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: #002fff;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  button.userInput {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    border: 1px solid #0fe9e9;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: #002fff;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  

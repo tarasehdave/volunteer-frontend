@@ -68,15 +68,26 @@ layout: base
     <form id="username" action="javascript:login_user()">
         <p><label>
             User ID:
-            <input class="userInput" type="text" name="uid" id="uid" required="" />
+            <input class="userInput" type="text" pattern="[a-zA-Z]+" maxlength="10" name="uid" id="uid" required="" />
         </label></p>
         <p><label>
             Password:
             <input class="userInput" type="password" name="password" id="password" required="" />
         </label></p>
+        <p><label>
+            First Name:
+            <input class="userInput" type="text" name="fname" maxlength="15" id="fname" required="" />
+        </label></p>
+        <p><label>
+            Last Name:
+            <input class="userInput" type="text" name="lname" maxlength="15" id="lname" required="" />
+        </label></p>
+        <p><label>
+            Email Address:
+            <input class="userInput" type="email" name="email" id="email" required="" />
+        </label></p>
         <p>
-            <button class="userInput">Login</button>
+            <button class="userInput">Sign Up</button>
         </p>
-        <a href="/volunteer-frontend/AF_vsignup.html">New User? Sign up</a>
     </form>
 </div>
