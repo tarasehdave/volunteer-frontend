@@ -8,7 +8,71 @@ layout: base
         return new Date();
     }
 </script>
+<script type="module">
 
+    // uri variable and options object are obtained from config.js
+    import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
+  
+    function search_event(){
+        const url = uri + '/api/events/query';
+        const resultContainer = document.getElementById("result");
+
+        fetch(url, options)
+        .then(response => {
+        if (response.status !== 200) {
+            const errorMsg = 'Database response error: ' + response.status;
+            console.log(errorMsg);
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.innerHTML = errorMsg;
+            tr.appendChild(td);
+            resultContainer.appendChild(tr);
+            return;
+            }
+
+    response.json().then(data => {
+      console.log(data);
+      for (const row of data) {
+        const tr = document.createElement("tr");
+
+        // Make each cell editable with input fields
+        const name = document.createElement("td");
+        const id = document.createElement("td");
+        const age = document.createElement("td");
+
+        const nameInput = document.createElement("input");
+
+        nameInput.value = row.title;
+        name.appendChild(nameInput);
+          id.innerHTML = row.description; 
+          age.innerHTML = row.address;
+
+        tr.appendChild(name);
+        tr.appendChild(id);
+        tr.appendChild(age);
+
+        // Add a radio button for row selection
+        const selectRadio = document.createElement("input");
+        selectRadio.type = "radio";
+        selectRadio.name = "selectedRow";
+        selectRadio.value = row.id;
+
+        tr.appendChild(selectRadio);
+
+        resultContainer.appendChild(tr);
+      }
+    })
+  })
+  .catch(err => {
+    console.error(err);
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.innerHTML = err + ": " + url;
+    tr.appendChild(td);
+    resultContainer.appendChild(tr);
+  });
+    }
+  </script>
 <div class="container">
     <form id="search" action="javascript:search_event()">
         <p><label>
@@ -36,3 +100,23 @@ layout: base
         </p>
     </form>
 </div>  
+<html>
+    <body>
+        <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Address</th>
+                <th>Zip Code</th>
+                <th>Event Date</th>
+                <th>Select</th>
+              </tr>
+            </thead>
+            <tbody id="result">
+              <!-- javascript generated data -->
+            </tbody>
+          </table>
+
+    </body>
+</html>
