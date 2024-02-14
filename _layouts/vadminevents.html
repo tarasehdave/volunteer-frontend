@@ -16,6 +16,11 @@ layout: base
             window.location.href = "{{site.baseurl}}/AB_vacc.html";
         }
     }
+    else
+    {
+        alert("Please Log In first!");
+        window.location.href = "{{site.baseurl}}/AB_vacc.html";
+    }
 
     function isSignedIn()
     {
@@ -148,7 +153,6 @@ layout: base
           tr.setAttribute('id', row.id);
           tr.addEventListener('click', function(e)
           {
-              debugger;
               var radiob = document.getElementById('radio-' + row.id);
               radiob.checked = true;
           });
