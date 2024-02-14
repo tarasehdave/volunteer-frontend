@@ -84,231 +84,236 @@ layout: base
 
 </script>
 <html>
-<body class="oppconn">
-  <h3>Manage Events</h3>
-    <br /><br />
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Address</th>
-      <th>zip Code</th>
-      <th>Select</th>
-    </tr>
-  </thead>
-  <tbody id="result">
-    <!-- javascript generated data -->
-  </tbody>
-</table>
+    <body class="oppconn">
+    <h3>Manage Events</h3>
+        <br /><br />
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Address</th>
+                    <th>Zip Code</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody id="result">
+                <!-- javascript generated data -->
+            </tbody>
+        </table>
 
-<!-- Add buttons for editing and deleting -->
-<div>
-  <button id="editButton" class="userInput">Edit Selected</button>
-  <button id="deleteButton" class="userInput">Delete Selected</button>
-  <button id="createEvent" class="userInput" onclick="window.location.href = '{{site.baseurl}}/createEvent'">Create Event</button>
-</div>
+        <!-- Add buttons for editing and deleting -->
+        <div>
+        <button id="editButton" class="userInput">Edit Selected</button>
+        <button id="deleteButton" class="userInput">Delete Selected</button>
+        <button id="createEvent" class="userInput" onclick="window.location.href = '{{site.baseurl}}/createEvent'">Create Event</button>
+        </div>
 
-<script>
-  if(!isSignedIn())
-  {
-      document.getElementById('editButton').style.visibility = 'hidden';
-      document.getElementById('deleteButton').style.visibility = 'hidden';
-      document.getElementById('createEvent').style.visibility = 'hidden';
-  }
-  else
-  {
-      if(!isAdmin())
-      {
-          document.getElementById('editButton').style.visibility = 'hidden';
-          document.getElementById('deleteButton').style.visibility = 'hidden';
-          document.getElementById('createEvent').style.visibility = 'hidden';
-      }
-  }
-</script>
-
-<script type="module">
-  import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
-
-  const url = uri + '/api/events/';
-  const resultContainer = document.getElementById("result");
-
-  fetch(url, options)
-    .then(response => {
-      if (response.status !== 200) {
-        const errorMsg = 'Database response error: ' + response.status;
-        console.log(errorMsg);
-        const tr = document.createElement("tr");
-        const td = document.createElement("td");
-        td.innerHTML = errorMsg;
-        tr.appendChild(td);
-        resultContainer.appendChild(tr);
-        return;
-      }
-
-      response.json().then(data => {
-        console.log(data);
-        for (const row of data) {
-          const tr = document.createElement("tr");
-          tr.setAttribute('id', row.id);
-          tr.addEventListener('click', function(e)
-          {
-              var radiob = document.getElementById('radio-' + row.id);
-              radiob.checked = true;
-          });
-
-
-          // Make each cell editable with input fields
-          const vtitle = document.createElement("td");
-          const description = document.createElement("td");
-          const address = document.createElement("td");
-          const zipcode = document.createElement("td");
-          const radio = document.createElement("td");
-
-          const titleInput = document.createElement("input");
-          const descInput = document.createElement("input");
-          const addInput = document.createElement("input");
-          const zipInput = document.createElement("input");
-
-          titleInput.value = row.title;
-          vtitle.appendChild(titleInput);
-          descInput.value = row.description;
-          description.appendChild(descInput);
-          addInput.value = row.address;
-          address.appendChild(addInput);
-          zipInput.value = row.zipcode;
-          zipcode.appendChild(zipInput);
- 
-          //description.innerHTML = row.description; 
-          //address.innerHTML = row.address;
-          //zipcode.innerHTML = row.zipcode;
-
-          tr.appendChild(vtitle);
-          tr.appendChild(description);
-          tr.appendChild(address);
-          tr.appendChild(zipcode);
-
-          // Add a radio button for row selection
-          const selectRadio = document.createElement("input");
-          selectRadio.type = "radio";
-          selectRadio.name = "selectedRow";
-          selectRadio.value = row.id;
-          selectRadio.id = 'radio-' + row.id;
-
-          radio.appendChild(selectRadio);
-          tr.appendChild(radio);
-
-          resultContainer.appendChild(tr);
+        <script>
+        if(!isSignedIn())
+        {
+            document.getElementById('editButton').style.visibility = 'hidden';
+            document.getElementById('deleteButton').style.visibility = 'hidden';
+            document.getElementById('createEvent').style.visibility = 'hidden';
         }
-      })
-    })
-    .catch(err => {
-      console.error(err);
-      const tr = document.createElement("tr");
-      const td = document.createElement("td");
-      td.innerHTML = err + ": " + url;
-      tr.appendChild(td);
-      resultContainer.appendChild(tr);
-    });
+        else
+        {
+            if(!isAdmin())
+            {
+                document.getElementById('editButton').style.visibility = 'hidden';
+                document.getElementById('deleteButton').style.visibility = 'hidden';
+                document.getElementById('createEvent').style.visibility = 'hidden';
+            }
+        }
+        </script>
 
+        <script type="module">
+        import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
 
-</script>
-<script type="module">
-  import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
-      document.getElementById("editButton").addEventListener("click", editSelectedRows);
-  document.getElementById("deleteButton").addEventListener("click", deleteSelectedRows);
-    function deleteSelectedRows(){
-        // Set Authenticate endpoint
         const url = uri + '/api/events/';
+        const resultContainer = document.getElementById("result");
+
+        fetch(url, options)
+            .then(response => {
+            if (response.status !== 200) {
+                const errorMsg = 'Database response error: ' + response.status;
+                console.log(errorMsg);
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                td.innerHTML = errorMsg;
+                tr.appendChild(td);
+                resultContainer.appendChild(tr);
+                return;
+            }
+
+            response.json().then(data => {
+                console.log(data);
+                for (const row of data) {
+                const tr = document.createElement("tr");
+                tr.setAttribute('id', row.id);
+                tr.addEventListener('click', function(e)
+                {
+                    var radiob = document.getElementById('radio-' + row.id);
+                    radiob.checked = true;
+                });
+
+
+                // Make each cell editable with input fields
+                const vtitle = document.createElement("td");
+                const description = document.createElement("td");
+                const address = document.createElement("td");
+                const zipcode = document.createElement("td");
+                const radio = document.createElement("td");
+
+                const titleInput = document.createElement("input");
+                titleInput.setAttribute('class', 'userInput');
+                const descInput = document.createElement("input");
+                descInput.setAttribute('class', 'userInput');
+                const addInput = document.createElement("input");
+                addInput.setAttribute('class', 'userInput');
+                const zipInput = document.createElement("input");
+                zipInput.setAttribute('class', 'userInput');
+                
+                titleInput.value = row.title;
+                vtitle.appendChild(titleInput);
+                descInput.value = row.description;
+                description.appendChild(descInput);
+                addInput.value = row.address;
+                address.appendChild(addInput);
+                zipInput.value = row.zipcode;
+                zipcode.appendChild(zipInput);
         
-        const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
+                //description.innerHTML = row.description; 
+                //address.innerHTML = row.address;
+                //zipcode.innerHTML = row.zipcode;
 
-    if (!selectedValue) {
+                tr.appendChild(vtitle);
+                tr.appendChild(description);
+                tr.appendChild(address);
+                tr.appendChild(zipcode);
 
-      console.log("No row selected.");
-      return;
-    }
-        // Set the body of the request to include login data from the DOM
-        const body = {
-            id: selectedValue,  
-        };
+                // Add a radio button for row selection
+                const selectRadio = document.createElement("input");
+                selectRadio.setAttribute('class', 'userInput');
+                selectRadio.type = "radio";
+                selectRadio.name = "selectedRow";
+                selectRadio.value = row.id;
+                selectRadio.id = 'radio-' + row.id;
 
-        // Change options according to Authentication requirements
-        const authOptions = {
-            ...options, // This will copy all properties from options
-            method: 'DELETE', // Override the method property
-            cache: 'no-cache', // Set the cache property
-            body: JSON.stringify(body)
-        };
+                radio.appendChild(selectRadio);
+                tr.appendChild(radio);
 
-        // Fetch JWT
-        fetch(url, authOptions)
-        .then(response => {
-            // handle error response from Web API
-            if (!response.ok) {
-                
-                console.log(response);
-                return;
-            }
-            // Success!!!
-            // Redirect to the database page
-            window.location.href = "{{site.baseurl}}/AE_vadminevents.html";
-        })
-        // catch fetch errors (ie ACCESS to server blocked)
-        .catch(err => {
+                resultContainer.appendChild(tr);
+                }
+            })
+            })
+            .catch(err => {
             console.error(err);
-        });
-    }
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.innerHTML = err + ": " + url;
+            tr.appendChild(td);
+            resultContainer.appendChild(tr);
+            });
 
-    function editSelectedRows(){
-        // Set Authenticate endpoint
-        const url = uri + '/api/events/';
-        const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
 
-    if (!selectedValue) {
-
-      console.log("No row selected.");
-      return;
-    }
-        const editedValues = {
-        vtitle: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(1) input").value,
-        desc: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(2) input").value,
-        addr: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(3) input").value,
-        zip: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(4) input").value,
-      };
-        // Set the body of the request to include login data from the DOM
-        const body = {
-            id: selectedValue,
-            data: {"title":editedValues.vtitle, "description":editedValues.desc, "address": editedValues.addr, "zipcode":editedValues.zip},
-        };
-
-        // Change options according to Authentication requirements
-        const authOptions = {
-            ...options, // This will copy all properties from options
-            method: 'PUT', // Override the method property
-            cache: 'no-cache', // Set the cache property
-            body: JSON.stringify(body)
-        };
-
-        // Fetch JWT
-        fetch(url, authOptions)
-        .then(response => {
-            // handle error response from Web API
-            if (!response.ok) {
+        </script>
+        <script type="module">
+        import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
+            document.getElementById("editButton").addEventListener("click", editSelectedRows);
+        document.getElementById("deleteButton").addEventListener("click", deleteSelectedRows);
+            function deleteSelectedRows(){
+                // Set Authenticate endpoint
+                const url = uri + '/api/events/';
                 
-                console.log(response);
-                return;
-            }
-            // Success!!!
-            // Redirect to the database page
-            window.location.href = "{{site.baseurl}}/AE_vadminevents.html";
-        })
-        // catch fetch errors (ie ACCESS to server blocked)
-        .catch(err => {
-            console.error(err);
-        });
-    }
+                const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
 
-</script>
-</body>
+            if (!selectedValue) {
+
+            console.log("No row selected.");
+            return;
+            }
+                // Set the body of the request to include login data from the DOM
+                const body = {
+                    id: selectedValue,  
+                };
+
+                // Change options according to Authentication requirements
+                const authOptions = {
+                    ...options, // This will copy all properties from options
+                    method: 'DELETE', // Override the method property
+                    cache: 'no-cache', // Set the cache property
+                    body: JSON.stringify(body)
+                };
+
+                // Fetch JWT
+                fetch(url, authOptions)
+                .then(response => {
+                    // handle error response from Web API
+                    if (!response.ok) {
+                        
+                        console.log(response);
+                        return;
+                    }
+                    // Success!!!
+                    // Redirect to the database page
+                    window.location.href = "{{site.baseurl}}/AE_vadminevents.html";
+                })
+                // catch fetch errors (ie ACCESS to server blocked)
+                .catch(err => {
+                    console.error(err);
+                });
+            }
+
+            function editSelectedRows(){
+                // Set Authenticate endpoint
+                const url = uri + '/api/events/';
+                const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
+
+            if (!selectedValue) {
+
+            console.log("No row selected.");
+            return;
+            }
+                const editedValues = {
+                vtitle: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(1) input").value,
+                desc: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(2) input").value,
+                addr: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(3) input").value,
+                zip: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(4) input").value,
+            };
+                // Set the body of the request to include login data from the DOM
+                const body = {
+                    id: selectedValue,
+                    data: {"title":editedValues.vtitle, "description":editedValues.desc, "address": editedValues.addr, "zipcode":editedValues.zip},
+                };
+
+                // Change options according to Authentication requirements
+                const authOptions = {
+                    ...options, // This will copy all properties from options
+                    method: 'PUT', // Override the method property
+                    cache: 'no-cache', // Set the cache property
+                    body: JSON.stringify(body)
+                };
+
+                // Fetch JWT
+                fetch(url, authOptions)
+                .then(response => {
+                    // handle error response from Web API
+                    if (!response.ok) {
+                        
+                        console.log(response);
+                        return;
+                    }
+                    // Success!!!
+                    // Redirect to the database page
+                    window.location.href = "{{site.baseurl}}/AE_vadminevents.html";
+                })
+                // catch fetch errors (ie ACCESS to server blocked)
+                .catch(err => {
+                    console.error(err);
+                });
+            }
+
+        </script>
+    </body>
 </html>

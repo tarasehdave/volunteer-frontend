@@ -87,19 +87,19 @@ layout: base
 <body class="oppconn">
     <h3>Manage Users</h3>
     <br /><br />
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>ID</th>
-      <th>Age</th>
-      <th>Select</th>
-    </tr>
-  </thead>
-  <tbody id="result">
-    <!-- javascript generated data -->
-  </tbody>
-</table>
+    <table>
+    <thead>
+        <tr>
+        <th>Name</th>
+        <th>ID</th>
+        <th>Age</th>
+        <th>Select</th>
+        </tr>
+    </thead>
+    <tbody id="result">
+        <!-- javascript generated data -->
+    </tbody>
+    </table>
 
 <!-- Add buttons for editing and deleting -->
 <div>
@@ -151,22 +151,24 @@ layout: base
         for (const row of data) {
           const tr = document.createElement("tr");
           tr.setAttribute('id', row.id);
-        tr.addEventListener('click', function(e)
-        {
-            var radiob = document.getElementById('radio-' + row.id);
-            radiob.checked = true;
-        });
+            tr.addEventListener('click', function(e)
+            {
+                var radiob = document.getElementById('radio-' + row.id);
+                radiob.checked = true;
+            });
 
           // Make each cell editable with input fields
           const name = document.createElement("td");
           const id = document.createElement("td");
           const dob = document.createElement("td");
           const radio = document.createElement("td");
-
+          
           const nameInput = document.createElement("input");
+          nameInput.setAttribute('class', 'userInput');
           nameInput.value = row.name;
           name.appendChild(nameInput);
           const idInput = document.createElement("input");
+          idInput.setAttribute('class', 'userInput');
           idInput.value = row.uid;
           id.appendChild(idInput);
             //id.innerHTML = row.uid; 
@@ -183,6 +185,7 @@ layout: base
           selectRadio.name = "selectedRow";
           selectRadio.value = row.id;
           selectRadio.id = 'radio-' + row.id;
+          selectRadio.setAttribute('class', 'userInput');
 
           radio.appendChild(selectRadio);
 
