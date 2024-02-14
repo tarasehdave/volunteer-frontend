@@ -201,35 +201,38 @@ layout: base
         });
     }
   </script>
-<div class="container">
-    <form id="search" action="javascript:search_event()">
-        <p><label>
-            Title:
-            <input class="userInput" type="text" name="title" id="title" />
-        </label></p>
-        <p><label>
-            Description:
-            <input class="userInput" type="text" name="description" id="description" />
-        </label></p>
-        <p><label>
-            Address:
-            <input class="userInput" type="text" name="address" id="address" />
-        </label></p>
-        <p><label>
-            Zip:
-            <input class="userInput" type="text" pattern="^[0-9]{5}$" maxlength="5" name="zip" id="zip" />
-        </label></p>
-        <p><label>
-            Date:
-            <input class="userInput" type="date" pattern="" name="date" id="date" />
-        </label></p>
-        <p>
-            <button class="userInput">Search</button>
-        </p>
-    </form>
-</div>  
+
 <html>
-    <body>
+    <body class="oppconn">
+        <h3>All Events</h3>
+            <br /><br />
+        <div class="container">
+            <form id="search" action="javascript:search_event()">
+                <p><label>
+                    Title:
+                    <input class="userInput" type="text" name="title" id="title" />
+                </label></p>
+                <p><label>
+                    Description:
+                    <input class="userInput" type="text" name="description" id="description" />
+                </label></p>
+                <p><label>
+                    Address:
+                    <input class="userInput" type="text" name="address" id="address" />
+                </label></p>
+                <p><label>
+                    Zip:
+                    <input class="userInput" type="text" pattern="^[0-9]{5}$" maxlength="5" name="zip" id="zip" />
+                </label></p>
+                <p><label>
+                    Date:
+                    <input class="userInput" type="date" pattern="" name="date" id="date" />
+                </label></p>
+                <p>
+                    <button class="userInput">Search</button>
+                </p>
+            </form>
+        </div>  
         <table>
             <thead>
               <tr>
@@ -245,8 +248,8 @@ layout: base
               <!-- javascript generated data -->
             </tbody>
           </table>
-<div>
-    <button id="editButton" onclick="addEvent()">Add Selected</button>
-</div>
+        <div>
+            <button id="editButton" onclick="addEvent()">Add Selected</button>
+        </div>
     </body>
 </html>
