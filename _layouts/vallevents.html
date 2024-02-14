@@ -320,20 +320,7 @@ layout: base
             </tbody>
           </table>
         <div>
-            <button id="editButton" onclick="addEvent()">Add Selected</button>
+            <button id="editButton" class="userInput" onclick="addEvent()">Add Selected</button>
         </div>
-        <script>
-            if(!isSignedIn())
-            {
-                document.getElementById('editButton').style.visibility = 'hidden';
-            }
-            else
-            {
-                if(!isAdmin())
-                {
-                    document.getElementById('editButton').style.visibility = 'hidden';
-                }
-            }
-        </script>
     </body>
 </html>
