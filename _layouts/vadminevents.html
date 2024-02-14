@@ -5,11 +5,7 @@ layout: base
 <script>
     if(isSignedIn())
     {
-                // check for admin
-
-        let jwt = getCookie("jwt");
-        let data = parseJwt(jwt);
-        if(data._role == "Admin")
+        if(isAdmin())
         {
             // call users fetch here
             //getAllEvents();
@@ -23,8 +19,6 @@ layout: base
 
     function isSignedIn()
     {
-        //setCookie('jwt','rah', 1);
-        
         let jwt = getCookie("jwt");
         if(jwt)
         {
@@ -32,10 +26,31 @@ layout: base
         }
         else
         {
-            alert("Please Log In first!");
             return false;
         }
     }
+
+    function isAdmin()
+    {
+        if(isSignedIn())
+        {
+            let jwt = getCookie("jwt");
+            let data = parseJwt(jwt);
+            if(data._role == "Admin")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     function parseJwt (token) {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -84,10 +99,28 @@ layout: base
 
 <!-- Add buttons for editing and deleting -->
 <div>
-  <button id="editButton">Edit Selected</button>
-  <button id="deleteButton">Delete Selected</button>
-  <button onclick="window.location.href = '{{site.baseurl}}/createEvent'">Create Event</button>
+  <button id="editButton" class="userInput">Edit Selected</button>
+  <button id="deleteButton" class="userInput">Delete Selected</button>
+  <button id="createEvent" class="userInput" onclick="window.location.href = '{{site.baseurl}}/createEvent'">Create Event</button>
 </div>
+
+<script>
+  if(!isSignedIn())
+  {
+      document.getElementById('editButton').style.visibility = 'hidden';
+      document.getElementById('deleteButton').style.visibility = 'hidden';
+      document.getElementById('createEvent').style.visibility = 'hidden';
+  }
+  else
+  {
+      if(!isAdmin())
+      {
+          document.getElementById('editButton').style.visibility = 'hidden';
+          document.getElementById('deleteButton').style.visibility = 'hidden';
+          document.getElementById('createEvent').style.visibility = 'hidden';
+      }
+  }
+</script>
 
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
@@ -112,12 +145,21 @@ layout: base
         console.log(data);
         for (const row of data) {
           const tr = document.createElement("tr");
+          tr.setAttribute('id', row.id);
+          tr.addEventListener('click', function(e)
+          {
+              debugger;
+              var radiob = document.getElementById('radio-' + row.id);
+              radiob.checked = true;
+          });
+
 
           // Make each cell editable with input fields
           const vtitle = document.createElement("td");
           const description = document.createElement("td");
           const address = document.createElement("td");
           const zipcode = document.createElement("td");
+          const radio = document.createElement("td");
 
           const titleInput = document.createElement("input");
           const descInput = document.createElement("input");
@@ -147,8 +189,10 @@ layout: base
           selectRadio.type = "radio";
           selectRadio.name = "selectedRow";
           selectRadio.value = row.id;
+          selectRadio.id = 'radio-' + row.id;
 
-          tr.appendChild(selectRadio);
+          radio.appendChild(selectRadio);
+          tr.appendChild(radio);
 
           resultContainer.appendChild(tr);
         }

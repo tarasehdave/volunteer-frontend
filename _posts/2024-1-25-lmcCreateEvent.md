@@ -49,9 +49,8 @@ The form triggers the login_user function defined in the JavaScript below when t
             Date of Event:
             <input class="userInput" type="text" id="date" required>
         </label></p>
-
         <p>
-            <button onclick="login_user()">Submit</button>
+            <button class="userInput">Create</button>
         </p>
     </form>
 </div>

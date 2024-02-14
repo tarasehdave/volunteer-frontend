@@ -2,20 +2,6 @@
 layout: base 
 ---
 <script>
-    if(isSignedIn())
-    {
-        let jwt = getCookie("jwt");
-        let data = parseJwt(jwt);
-        document.getElementById('greet') = 'Hello, ' + data._uid;
-        document.getElementById('loggedin').style.visibility = 'visible';
-        document.getElementById('loggedout').style.visibility = 'hidden';
-    }
-    else
-    {
-        document.getElementById('loggedin').style.visibility = 'hidden';
-        document.getElementById('loggedout').style.visibility = 'visible';
-    }
-
     function isSignedIn()
     {
         debugger;
@@ -118,8 +104,11 @@ layout: base
 </script>
 
 <body class="oppconn">
-    <h3>My Account</h3>
+    <h3 id="greet">My Account</h3>
     <br /><br />
+    <div id="loggedin">
+        <button class="userInput" onclick="document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'; window.location.href = '{{site.baseurl}}/AB_vacc.html';">Logout</button>
+    </div>
     <div class="container" id="loggedout">
         <form id="username" action="javascript:login_user()">
             <p><label>
@@ -136,7 +125,20 @@ layout: base
             <a href="{{site.baseurl}}/createUser"><h4>New User Registration</h4></a>
         </form>
     </div>
-    <div id="loggedin">
-        <p id="greet"></p>
-    </div>
+    <script>
+        debugger;
+        if(isSignedIn())
+            {
+                let jwt = getCookie("jwt");
+                let data = parseJwt(jwt);
+                document.getElementById('greet').innerText = 'Hello, ' + data._uid;
+                document.getElementById('loggedin').style.visibility = 'visible';
+                document.getElementById('loggedout').style.visibility = 'hidden';
+            }
+            else
+            {
+                document.getElementById('loggedin').style.visibility = 'hidden';
+                document.getElementById('loggedout').style.visibility = 'visible';
+            }
+    </script>
 </body>

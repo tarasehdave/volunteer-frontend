@@ -5,11 +5,7 @@ layout: base
 <script>
     if(isSignedIn())
     {
-        // check for admin
-
-        let jwt = getCookie("jwt");
-        let data = parseJwt(jwt);
-        if(data._role == "Admin")
+        if(isAdmin())
         {
             // call users fetch here
            // getAllUsers();
@@ -19,6 +15,10 @@ layout: base
             alert("Only Admins can view this page");
             window.location.href = "{{site.baseurl}}/AB_vacc.html";
         }
+    }
+    else
+    {
+        alert("Please Log In first!");
     }
 
     function parseJwt (token) {
@@ -33,8 +33,6 @@ layout: base
 
     function isSignedIn()
     {
-        //setCookie('jwt','rah', 1);
-        
         let jwt = getCookie("jwt");
         if(jwt)
         {
@@ -42,7 +40,27 @@ layout: base
         }
         else
         {
-            alert("Please Log In first!");
+            return false;
+        }
+    }
+
+    function isAdmin()
+    {
+        if(isSignedIn())
+        {
+            let jwt = getCookie("jwt");
+            let data = parseJwt(jwt);
+            if(data._role == "Admin")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
             return false;
         }
     }
@@ -84,10 +102,28 @@ layout: base
 
 <!-- Add buttons for editing and deleting -->
 <div>
-  <button id="editButton">Edit Selected</button>
-  <button id="deleteButton">Delete Selected</button>
-  <button onclick="window.location.href = '{{site.baseurl}}/createUser'">Create User</button>
+  <button id="editButton" class="userInput">Edit Selected</button>
+  <button id="deleteButton" class="userInput">Delete Selected</button>
+  <button id="createUser" class="userInput" onclick="window.location.href = '{{site.baseurl}}/createUser'">Create User</button>
 </div>
+
+<script>
+    if(!isSignedIn())
+    {
+        document.getElementById('editButton').style.visibility = 'hidden';
+        document.getElementById('deleteButton').style.visibility = 'hidden';
+        document.getElementById('createUser').style.visibility = 'hidden';
+    }
+    else
+    {
+        if(!isAdmin())
+        {
+            document.getElementById('editButton').style.visibility = 'hidden';
+            document.getElementById('deleteButton').style.visibility = 'hidden';
+            document.getElementById('createUser').style.visibility = 'hidden';
+        }
+    }
+</script>
 
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
@@ -113,11 +149,18 @@ layout: base
         console.log(data);
         for (const row of data) {
           const tr = document.createElement("tr");
+          tr.setAttribute('id', row.id);
+        tr.addEventListener('click', function(e)
+        {
+            var radiob = document.getElementById('radio-' + row.id);
+            radiob.checked = true;
+        });
 
           // Make each cell editable with input fields
           const name = document.createElement("td");
           const id = document.createElement("td");
           const dob = document.createElement("td");
+          const radio = document.createElement("td");
 
           const nameInput = document.createElement("input");
           nameInput.value = row.name;
@@ -131,14 +174,16 @@ layout: base
           tr.appendChild(name);
           tr.appendChild(id);
           tr.appendChild(dob);
+          tr.appendChild(radio);
 
           // Add a radio button for row selection
           const selectRadio = document.createElement("input");
           selectRadio.type = "radio";
           selectRadio.name = "selectedRow";
           selectRadio.value = row.id;
+          selectRadio.id = 'radio-' + row.id;
 
-          tr.appendChild(selectRadio);
+          radio.appendChild(selectRadio);
 
           resultContainer.appendChild(tr);
         }
@@ -155,20 +200,21 @@ layout: base
 
 </script>
 <script type="module">
-  import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
-      document.getElementById("editButton").addEventListener("click", editSelectedRows);
-  document.getElementById("deleteButton").addEventListener("click", deleteSelectedRows);
-    function deleteSelectedRows(){
+    import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
+    document.getElementById("editButton").addEventListener("click", editSelectedRows);
+    document.getElementById("deleteButton").addEventListener("click", deleteSelectedRows);
+    function deleteSelectedRows()
+    {
         // Set Authenticate endpoint
         const url = uri + '/api/users/';
         
         const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
 
-    if (!selectedValue) {
+        if (!selectedValue) {
 
-      console.log("No row selected.");
-      return;
-    }
+        console.log("No row selected.");
+        return;
+        }
         // Set the body of the request to include login data from the DOM
         const body = {
             uid: selectedValue,  
@@ -194,27 +240,30 @@ layout: base
             // Success!!!
             // Redirect to the database page
             window.location.href = "{{site.baseurl}}/AF_vusers.html";
-        })
-        // catch fetch errors (ie ACCESS to server blocked)
+            })
+            // catch fetch errors (ie ACCESS to server blocked)
         .catch(err => {
-            console.error(err);
+                console.error(err);
         });
     }
 
-    function editSelectedRows(){
+    function editSelectedRows()
+    {
         // Set Authenticate endpoint
         const url = uri + '/api/users/';
         const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
 
-    if (!selectedValue) {
+        if (!selectedValue) {
 
-      console.log("No row selected.");
-      return;
-    }
+        console.log("No row selected.");
+        return;
+        }
+        
         const editedValues = {
-        name: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(1) input").value,
-        uid: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(2) input").value,
-      };
+            name: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(1) input").value,
+            uid: document.querySelector('input[name="selectedRow"]:checked').closest("tr").querySelector("td:nth-child(2) input").value,
+            };
+            
         // Set the body of the request to include login data from the DOM
         const body = {
             uid: selectedValue,

@@ -24,11 +24,15 @@ layout: base
 
     function search_event()
     {
-        
+        debugger;
         if(isSignedIn())
         {
             filter_event();
         } 
+        else
+        {
+            alert("Please Log In first!");
+        }
     }
 
     function parseJwt (token) {
@@ -50,7 +54,6 @@ layout: base
         }
         else
         {
-            alert("Please Log In first!");
             return false;
         }
     }
@@ -100,6 +103,12 @@ layout: base
             console.log(data);
             for (const row of data) {
                 const tr = document.createElement("tr");
+                tr.setAttribute('id', row.id);
+                tr.addEventListener('click', function(e)
+                {
+                    var radiob = document.getElementById('radio-' + row.id);
+                    radiob.checked = true;
+                });
 
                 // Make each cell editable with input fields
                 const title = document.createElement("td");
@@ -107,6 +116,7 @@ layout: base
                 const address = document.createElement("td");
                 const zip = document.createElement("td");
                 const date = document.createElement("td");
+                const radio = document.createElement("td");
 
                 //const nameInput = document.createElement("input");
 
@@ -123,26 +133,16 @@ layout: base
                 tr.appendChild(address);
                 tr.appendChild(zip);
                 tr.appendChild(date);
+                tr.append(radio);
 
                 // Add a radio button for row selection
                 const selectRadio = document.createElement("input");
                 selectRadio.type = "radio";
                 selectRadio.name = "selectedRow";
                 selectRadio.value = row.id;
+                selectRadio.id = 'radio-'+row.id;
 
-/*                 tr.appendChild(selectRadio);
-
-                // Add a radio button for row selection
-                const selectRadio = document.createElement("div");
-                //selectRadio.type = "button";
-                
-                //selectRadio.value = "Add Event";
-                //selectRadio.id = row.id;
-                
-                //selectRadio.addEventListener('click', function(e){addEvent(e);} );
-                
-                selectRadio.innerHTML = "<input type='button' value='Add Event' id='"+row.id+"' onclick='addEvent("+row.id+")'>"; */
-                tr.appendChild(selectRadio);
+                radio.appendChild(selectRadio);
                 resultContainer.appendChild(tr);
                 }
             })
@@ -251,5 +251,18 @@ layout: base
         <div>
             <button id="editButton" onclick="addEvent()">Add Selected</button>
         </div>
+        <script>
+            if(!isSignedIn())
+            {
+                document.getElementById('editButton').style.visibility = 'hidden';
+            }
+            else
+            {
+                if(!isAdmin())
+                {
+                    document.getElementById('editButton').style.visibility = 'hidden';
+                }
+            }
+        </script>
     </body>
 </html>
