@@ -4,7 +4,7 @@ if (location.hostname === "localhost") {
 } else if (location.hostname === "127.0.0.1") {
         uri = "http://127.0.0.1:8965";
 } else {
-        uri = "https://tarasehdave.github.io/volunteer-frontend";
+        uri = "https://oppconn.stu.nighthawkcodingsociety.com";
 }
 
 export const options = {
