@@ -1,7 +1,67 @@
 ---
 layout: base
 ---
+
+
+<html>
+    <body class="oppconn">
+        <h3>All Events</h3>
+            <br /><br />
+        <p>These are all events available for volunteering. If you want to search for something specific, 
+            expand Search Events</p>
+        <details>
+            <summary>Search Events</summary>
+            <div class="container">
+            <form id="search" action="javascript:search_event()">
+                <p><label>
+                    Title:
+                    <input class="userInput" type="text" name="title" id="title" />
+                </label></p>
+                <p><label>
+                    Description:
+                    <input class="userInput" type="text" name="description" id="description" />
+                </label></p>
+                <p><label>
+                    Address:
+                    <input class="userInput" type="text" name="address" id="address" />
+                </label></p>
+                <p><label>
+                    Zip:
+                    <input class="userInput" type="text" pattern="^[0-9]{5}$" maxlength="5" name="zip" id="zip" />
+                </label></p>
+                <p><label>
+                    Date:
+                    <input class="userInput" type="date" pattern="" name="date" id="date" />
+                </label></p>
+                <p>
+                    <button class="userInput">Search</button>
+                </p>
+            </form>
+            </div>  
+        </details>
+        <br />
+        <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Address</th>
+                <th>Zip Code</th>
+                <th>Event Date</th>
+                <th>Select</th>
+              </tr>
+            </thead>
+            <tbody id="result">
+              <!-- javascript generated data -->
+            </tbody>
+          </table>
+        <div>
+            <button id="editButton" class="userInput" onclick="addEvent()">Add Selected</button>
+        </div>
+    </body>
+</html>
 <script>
+
     if(isSignedIn())
     {
         
@@ -72,8 +132,6 @@ layout: base
         return "";
     }
   
-  </script>
-<script>
      var uri;
         if (location.hostname === "localhost") {
                 uri = "http://localhost:8965";
@@ -92,6 +150,11 @@ layout: base
                 'Content-Type': 'application/json',
             },
         };
+
+    if(isSignedIn())
+    {
+        filter_event();
+    }
 
     function search_event()
     {
@@ -145,6 +208,7 @@ layout: base
         return "";
     }
 
+    
 
     function filter_event(){
         var url = uri + '/api/events/query?';
@@ -197,7 +261,7 @@ layout: base
                 description.innerHTML = row.description; 
                 address.innerHTML = row.address;
                 zip.innerHTML = row.zipcode;
-                date.innerHTML = row.date;
+                date.innerHTML = new Date(row.date).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"});
 
                 tr.appendChild(title);
                 tr.appendChild(description);
@@ -237,12 +301,9 @@ layout: base
             return;
         }
         
-        
         let jwt = getCookie("jwt");
         let data = parseJwt(jwt);
        
-
-
         const body = {
             id: selectedValue,
             data: {"userID":data.id},
@@ -272,55 +333,3 @@ layout: base
         });
     }
   </script>
-
-<html>
-    <body class="oppconn">
-        <h3>All Events</h3>
-            <br /><br />
-        <div class="container">
-            <form id="search" action="javascript:search_event()">
-                <p><label>
-                    Title:
-                    <input class="userInput" type="text" name="title" id="title" />
-                </label></p>
-                <p><label>
-                    Description:
-                    <input class="userInput" type="text" name="description" id="description" />
-                </label></p>
-                <p><label>
-                    Address:
-                    <input class="userInput" type="text" name="address" id="address" />
-                </label></p>
-                <p><label>
-                    Zip:
-                    <input class="userInput" type="text" pattern="^[0-9]{5}$" maxlength="5" name="zip" id="zip" />
-                </label></p>
-                <p><label>
-                    Date:
-                    <input class="userInput" type="date" pattern="" name="date" id="date" />
-                </label></p>
-                <p>
-                    <button class="userInput">Search</button>
-                </p>
-            </form>
-        </div>  
-        <table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Address</th>
-                <th>Zip Code</th>
-                <th>Event Date</th>
-                <th>Select</th>
-              </tr>
-            </thead>
-            <tbody id="result">
-              <!-- javascript generated data -->
-            </tbody>
-          </table>
-        <div>
-            <button id="editButton" class="userInput" onclick="addEvent()">Add Selected</button>
-        </div>
-    </body>
-</html>

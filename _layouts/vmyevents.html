@@ -73,6 +73,65 @@ layout: base
       return "";
   }
 
+  var uri;
+  if (location.hostname === "localhost") {
+          uri = "http://localhost:8965";
+  } else if (location.hostname === "127.0.0.1") {
+          uri = "http://127.0.0.1:8965";
+  } else {
+          uri = "https://flask2.nighthawkcodingsociety.com";
+  }
+
+  const options = {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'include', // include, same-origin, omit
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+  function addEvent(){
+      
+      debugger;
+
+      const selectedValue = document.querySelector('input[name="selectedRow"]:checked')?.value;
+
+      if (!selectedValue) {
+          console.log("No row selected.");
+          return;
+      }
+      
+      const body = {
+          id: selectedValue,
+          data: {"userID": null},
+      };
+
+      const authOptions = {
+          ...options, // This will copy all properties from options
+          method: 'PUT', // Override the method property
+          cache: 'no-cache', // Set the cache property
+          body: JSON.stringify(body)
+      };
+      const url2 = uri + '/api/events/';
+      fetch(url2, authOptions)
+      .then(response => {
+          // handle error response from Web API
+          if (!response.ok) {
+              
+              console.log(response);
+              return;
+          }
+          // Success!!!
+          // Redirect to the database page
+          window.location.href = "{{site.baseurl}}/AD_vmyevents.html";
+      })
+      // catch fetch errors (ie ACCESS to server blocked)
+      .catch(err => {
+          console.error(err);
+      });
+  }
 </script>
 <script type="module">
   import { uri, options } from '{{site.baseurl}}/assets/js/api/config.js';
@@ -103,6 +162,12 @@ layout: base
         console.log(data);
         for (const row of data) {
           const tr = document.createElement("tr");
+          tr.setAttribute('id', row.id);
+            tr.addEventListener('click', function(e)
+            {
+                var radiob = document.getElementById('radio-' + row.id);
+                radiob.checked = true;
+            });
 
           // Make each cell editable with input fields
           const name = document.createElement("td");
@@ -110,17 +175,28 @@ layout: base
           const age = document.createElement("td");
           const zip = document.createElement("td");
           const date = document.createElement("td");
-            name.innerHTML = row.title;
-            id.innerHTML = row.description; 
-            age.innerHTML = row.address;
-            zip.innerHTML = row.zipcode;
-            date.innerHTML = row.date;
+          const radio = document.createElement("td");
+
+          name.innerHTML = row.title;
+          id.innerHTML = row.description; 
+          age.innerHTML = row.address;
+          zip.innerHTML = row.zipcode;
+          date.innerHTML = new Date(row.date).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"});
+
+          const selectRadio = document.createElement("input");
+          selectRadio.type = "radio";
+          selectRadio.name = "selectedRow";
+          selectRadio.value = row.id;
+          selectRadio.id = 'radio-' + row.id;
+          selectRadio.setAttribute('class', 'userInput');
+          radio.appendChild(selectRadio);
 
           tr.appendChild(name);
           tr.appendChild(id);
           tr.appendChild(age);
           tr.appendChild(zip);
           tr.appendChild(date);
+          tr.appendChild(radio);
 
           resultContainer.appendChild(tr);
         }
@@ -134,8 +210,6 @@ layout: base
       tr.appendChild(td);
       resultContainer.appendChild(tr);
     });
-
-
 
     function isSignedIn()
     {
@@ -179,6 +253,8 @@ layout: base
         return JSON.parse(jsonPayload);
     }
 
+    
+
 </script>
 <html>
     <body class="oppconn">
@@ -192,12 +268,13 @@ layout: base
                 <th>Address</th>
                 <th>Zip Code</th>
                 <th>Event Date</th>
-                
+                <th></th>
               </tr>
             </thead>
             <tbody id="result">
               <!-- javascript generated data -->
             </tbody>
           </table>
+          <button id="editButton" class="userInput" onclick="addEvent()">Remove Selected</button>
     </body>
 </html>
