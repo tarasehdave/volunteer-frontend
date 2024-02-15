@@ -1,5 +1,6 @@
 title: Opportunity Connect
 description: "A site to connect volunteers to opportunities"
+<link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">
 owner_name: Tirth Thakkar
 github_username: Tirth-Thakkar
 github_repo: "volunteer-frontend"
