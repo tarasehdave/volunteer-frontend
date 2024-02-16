@@ -4,7 +4,6 @@ layout: base
 <script>
     function isSignedIn()
     {
-        debugger;
         let jwt = getCookie("jwt");
         if(jwt)
         {
@@ -72,23 +71,28 @@ layout: base
       .then(response => {
           // handle error response from Web API
           if (!response.ok) {
-              if (response.status === 401) {
-                  // Unauthorized - Redirect to 401 error page
-                  window.location.href = "{{site.baseurl}}/401.html";
-              } else if (response.status === 403) {
-                  // Forbidden - Redirect to 403 error page
-                  window.location.href = "{{site.baseurl}}/403.html";
-              } else if (response.status === 400) {
-                  // Forbidden - Redirect to 400 error page
-                  window.location.href = "{{site.baseurl}}/400.html";
-              } else if (response.status === 404) {
-                  // Not Found - Redirect to 404 error page
-                  window.location.href = "{{site.baseurl}}/404.html";
-              } else {
-                  // Handle other error responses
-                  const errorMsg = 'Login error: ' + response.status;
-                  console.log(errorMsg);
-              }
+            
+            response.json().then(data => {
+                document.getElementById("error").innerText = data.message;
+            });
+
+            // if (response.status === 401) {
+            //       // Unauthorized - Redirect to 401 error page
+            //       window.location.href = "{{site.baseurl}}/401.html";
+            //   } else if (response.status === 403) {
+            //       // Forbidden - Redirect to 403 error page
+            //       window.location.href = "{{site.baseurl}}/403.html";
+            //   } else if (response.status === 400) {
+            //       // Forbidden - Redirect to 400 error page
+            //       window.location.href = "{{site.baseurl}}/400.html";
+            //   } else if (response.status === 404) {
+            //       // Not Found - Redirect to 404 error page
+            //       window.location.href = "{{site.baseurl}}/404.html";
+            //   } else {
+            //       // Handle other error responses
+            //       const errorMsg = 'Login error: ' + response.status;
+            //       console.log(errorMsg);
+            //   }
               return;
           }
           // Success!!!
@@ -123,11 +127,11 @@ layout: base
             <p>
                 <button class="userInput">Login</button>
             </p>
+            <label id="error" style="color: red;"></label>
             <a href="{{site.baseurl}}/createUser"><h4>New User Registration</h4></a>
         </form>
     </div>
     <script>
-        debugger;
         if(isSignedIn())
             {
                 let jwt = getCookie("jwt");
