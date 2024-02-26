@@ -61,7 +61,7 @@ layout: base
       const authOptions = {
           ...options, // This will copy all properties from options
           method: 'POST', // Override the method property
-          //cache: 'no-cache', // Set the cache property
+          cache: 'no-cache', // Set the cache property
           credentials: 'include',
           body: JSON.stringify(body)
       };
